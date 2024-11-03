@@ -8,31 +8,62 @@ int main(void)
 {
 	string str;
 	stack<char> s;
+	int tmp = 1;
 	int res = 0;
 	getline(cin, str);
 	for (int i = 0; i < str.size(); ++i)
 	{
-		if (str[i] == '(' || str[i] == '[')
+		if (str[i] == '(')
+		{
+			tmp *= 2;
 			s.push(str[i]);
-		else if (str[i] == ')' && s.top() == '(')
-		{
-			s.pop();
-			res += 2;
 		}
-			
-		else if (str[i] == ']' && s.top() == '[')
+		else if (str[i] == ')')
 		{
-			s.pop();
-			res += 3;
+			if (s.empty() || s.top() != '(')
+			{
+				res = 0;
+				break;
+			}
+			else if (str[i - 1] == '(')
+			{
+				res += tmp;
+				tmp /= 2;
+				s.pop();
+			}
+			else
+			{
+				tmp /= 2;
+				s.pop();
+			}
 		}
-		else
+		else if (str[i] == '[')
 		{
-			res = 0;
-			break;
+			tmp *= 3;
+			s.push(str[i]);
+		}
+		else if (str[i] == ']')
+		{
+			if (s.empty() || s.top() != '[')
+			{
+				res = 0;
+				break;
+			}
+			else if (str[i - 1] == '[')
+			{
+				res += tmp;
+				tmp /= 3;
+				s.pop();
+			}
+			else
+			{
+				tmp /= 3;
+				s.pop();
+			}
 		}
 	}
 	if (!s.empty()) res = 0;
-	cout << boolalpha << res << endl;
+	cout << res << endl;
 	return 0;
 }
 
